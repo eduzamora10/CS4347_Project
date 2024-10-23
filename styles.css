@@ -1,7 +1,48 @@
 body{
-    background-color: blue;
+    background-color: #FF9800 !important;
 }
 
 h1{
     color: aliceblue;
 }
+
+.card {
+    background-color: #2C7865 !important;
+    color: aliceblue;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.book_img{
+    height: 500px;
+}
+
+.search_q{
+    background-color: #2C7865;
+    
+}
+
+.btn{
+    background-color: #99f767 !important;
+    border: solid black;
+    color: black !important;
+    
+    margin-right: 5%;
+}
+
+.btn:hover{
+    background-color: aliceblue !important;
+}
+
+.home-text{
+    font-weight: bolder !important;
+    text-align: center;
+}
+
+.home-p-text{
+    font-size: larger;
+    text-align: center;
+    font-weight: 500;
+    color: #000000;
+}
+
