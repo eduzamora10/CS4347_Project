@@ -19,7 +19,7 @@ h1{
 
 .search_q{
     background-color: #2C7865;
-    
+    border-radius: 5%;
 }
 
 .btn{
@@ -43,6 +43,6 @@ h1{
     font-size: larger;
     text-align: center;
     font-weight: 500;
-    color: #000000;
+    color: #f3e3d9;
 }
 
