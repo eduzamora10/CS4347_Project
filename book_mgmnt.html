@@ -60,7 +60,54 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" onclick="addBook()">Add Book</button>
+                    <button type="button" class="btn" onclick="addBook()">Done</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- update form modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Form Modal</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="updateBookForm">
+                        <div class="mb-3">
+                            <label for="book-id2" class="form-label">Book ID</label>
+                            <input type="text" class="form-control" id="book-id2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="title2" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="author2" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="author2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="genre2" class="form-label">Genre</label>
+                            <input type="text" class="form-control" id="genre2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="publisher2" class="form-label">Publisher</label>
+                            <input type="text" class="form-control" id="publisher2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="publication-year2" class="form-label">Publication Year</label>
+                            <input type="text" class="form-control" id="publication-year2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="availability2" class="form-label">Availability</label>
+                            <input type="text" class="form-control" id="availability2">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="updateBook()">Done</button>
                     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -69,7 +116,7 @@
 
     <!-- Table of books -->
     <div class="container mt-5">
-        <table class="table table-hover text-center" id="bookTable">
+        <table class="table custom-table table-hover text-center text-white table-bordered" id="bookTable">
             <thead>
                 <tr>
                     <th scope="col">Book ID</th>
@@ -84,7 +131,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr id="row1">
+                <tr id="1">
                     <td>1</td>
                     <td>What Is Computer Science?</td>
                     <td>LeBron James</td>
@@ -93,13 +140,13 @@
                     <td>2024</td>
                     <td>Available</td>
                     <td>
-                        <button type="button" class="btn btn-sm">Update</button>
+                        <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="setPlaceholders(`1`)">Update</button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm" onclick="deleteBook(`row1`)">Delete</button>
+                        <button type="button" class="btn btn-sm" onclick="deleteBook(`1`)">Delete</button>
                     </td>
                 </tr>
-                <tr id="row2"></tr>
+                <tr id="2">
                     <td>2</td>
                     <td>All About Bugs</td>
                     <td>Dr. Seuss</td>
@@ -108,10 +155,40 @@
                     <td>1634</td>
                     <td>Checked Out</td>
                     <td>
-                        <button type="button" class="btn btn-sm">Update</button>
+                        <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="setPlaceholders(`2`)">Update</button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm" onclick="deleteBook(`row2`)">Delete</button>
+                        <button type="button" class="btn btn-sm" onclick="deleteBook(`2`)">Delete</button>
+                    </td>
+                </tr>
+                <tr id="3">
+                    <td>3</td>
+                    <td>Brown Bear</td>
+                    <td>Bob</td>
+                    <td>Child Fiction</td>
+                    <td>Penguin</td>
+                    <td>2002</td>
+                    <td>Checked Out</td>
+                    <td>
+                        <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="setPlaceholders(`3`)">Update</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm" onclick="deleteBook(`3`)">Delete</button>
+                    </td>
+                </tr>
+                <tr id="4">
+                    <td>4</td>
+                    <td>Database Systems</td>
+                    <td>Jalal Omer</td>
+                    <td>Non-Fiction</td>
+                    <td>Springer</td>
+                    <td>2007</td>
+                    <td>Available</td>
+                    <td>
+                        <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="setPlaceholders(`4`)">Update</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm" onclick="deleteBook(`4`)">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -142,8 +219,8 @@
             // create new row and cells
             const table = document.getElementById("bookTable").getElementsByTagName("tbody")[0];
             const newRow = table.insertRow();
-            newRow.id = `row${table.rows.length}`;
-
+            newRow.id = bookId; // bookId is unique, makes adding, updating, deleting easier
+            
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
             const cell3 = newRow.insertCell(2);
@@ -151,11 +228,11 @@
             const cell5 = newRow.insertCell(4);
             const cell6 = newRow.insertCell(5);
             const cell7 = newRow.insertCell(6);
-
+            
             // add button cells
             const updateCell = newRow.insertCell(7);
             const deleteCell = newRow.insertCell(8);
-
+            
             // insert values
             cell1.innerHTML = bookId;
             cell2.innerHTML = title;
@@ -170,7 +247,10 @@
             updateButton.type = "button";
             updateButton.className = "btn btn-sm";
             updateButton.innerText = "Update";
-            updateButton.onclick = null;
+            updateButton.onclick = function() {
+                setPlaceholders(newRow.id);
+                $('#updateModal').modal('show');
+            };
             updateCell.appendChild(updateButton);
 
             // delete button
@@ -194,7 +274,6 @@
     <!-- deleting a book -->
     <script>
         function deleteBook(rowID) {
-            console.log(rowID);
             const table = document.getElementById("bookTable").getElementsByTagName("tbody")[0];
             const row = document.getElementById(rowID);
             if (table.rows.length == 1) {
@@ -203,6 +282,66 @@
             else if (confirm("Are you sure you want to delete this entry?")) {
                 row.remove();
             }
+        }
+    </script>
+
+    <!-- setting placeholders and updating book-->
+    <script>
+        let row; // necessary for use in updateBook
+
+        function setPlaceholders(rowID) {
+            const bookId = document.getElementById("book-id2");
+            const title = document.getElementById("title2");
+            const author = document.getElementById("author2");
+            const genre = document.getElementById("genre2");
+            const publisher = document.getElementById("publisher2");
+            const publicationYear = document.getElementById("publication-year2");
+            const availability = document.getElementById("availability2");
+
+            // set placeholders
+            row = document.getElementById(rowID);
+            const cells = row.getElementsByTagName('td');
+
+            bookId.value = cells[0].innerText;
+            title.value = cells[1].innerText;
+            author.value = cells[2].innerText;
+            genre.value = cells[3].innerText;
+            publisher.value = cells[4].innerText;
+            publicationYear.value = cells[5].innerText;
+            availability.value = cells[6].innerText;
+        }
+
+        function updateBook() {
+            // get values
+            const bookId = document.getElementById("book-id2").value;
+            const title = document.getElementById("title2").value;
+            const author = document.getElementById("author2").value;
+            const genre = document.getElementById("genre2").value;
+            const publisher = document.getElementById("publisher2").value;
+            const publicationYear = document.getElementById("publication-year2").value;
+            const availability = document.getElementById("availability2").value;
+
+            // check that all fields filled
+            if (!bookId || !title || !author || !genre || !publisher || !publicationYear || !availability) {
+                alert("Fill in all fields");
+                return;
+            }
+
+            const cells = row.getElementsByTagName('td');
+            console.log(cells)
+            cells[0].innerHTML = bookId;
+            cells[1].innerHTML = title;
+            cells[2].innerHTML = author;
+            cells[3].innerHTML = genre;
+            cells[4].innerHTML = publisher;
+            cells[5].innerHTML = publicationYear;
+            cells[6].innerHTML = availability;
+
+            // clear form fields
+            document.getElementById("updateBookForm").reset();
+
+            // hide modal
+            $('#updateModal').modal('hide');
         }
     </script>
 </body>
