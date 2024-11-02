@@ -17,9 +17,20 @@
         </div>
     </div>
 
-    <!-- Cart Table -->
-    <div class="container mt-5">
-        <table class="table custom-table table-hover text-center text-white table-bordered" id="bookTable" style="width:75%">
+    <!-- checkout modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabel">Order Complete!!</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Table and checkout form -->
+    <div class="container-cart">
+        <table class="table custom-table-checkout table-hover text-center text-white table-bordered" id="bookTable" style="width:55%">
             <thead>
                 <tr>
                     <th scope="col">Product</th>
@@ -59,6 +70,27 @@
                 </tr>
             </tbody>
         </table>
+        <form>
+            <div class="mb-3">
+                <label for="book-id" class="form-label">Address</label>
+                <input type="text" class="form-control" id="book-id" placeholder="Enter address">
+            </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="title" placeholder="Enter title">
+            </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Expiration Date</label>
+                <input type="text" class="form-control" id="author" placeholder="Enter author">
+            </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">CVV</label>
+                <input type="text" class="form-control" id="author" placeholder="Enter author">
+            </div>
+            <div class="mb-3"></div>
+                <button type="button" class="btn" data-toggle="modal" data-target="#checkoutModal">Checkout</button>
+            </div>
+        </form>
     </div>
 
 
