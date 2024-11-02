@@ -8,10 +8,83 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Checkout content goes here</h1>
-    <h2>There is no reference, you have the freedom to do it as you like</h2>
+   <!-- Header -->
+   <div class="container">
+        <div class="row align-items-center pt-3">
+            <div class="col">
+                <h1>Shopping Cart</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Table -->
+    <div class="container mt-5">
+        <table class="table custom-table table-hover text-center text-white table-bordered" id="bookTable" style="width:75%">
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="./assets/book4.jpg" class="book-cart d-block mx-lg-auto img-fluid" alt="book" loading="lazy">
+                        <h4>Python Programming by Tony F. Charles</h4>
+                    </td>
+                    <td>
+                        <input type="number" class="val1" id="input1" value="1" onchange="updateSubtotalAndSum()">
+                    </td>
+                    <td class="val2">$19.99</td>
+                    <td class="result">$19.99</td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="./assets/book5.jpg" class="book-cart d-block mx-lg-auto img-fluid" alt="book" loading="lazy">
+                        <h4>The Python Book by Rob Mastrodomenico</h4>
+                    </td>
+                    <td>
+                        <input type="number" class="val1" id="input1" value="1" onchange="updateSubtotalAndSum()">
+                    </td>
+                    <td class="val2">$24.99</td>
+                    <td class="result">$24.99</td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <h4>Cart Total:</h4>
+                    </td>
+                    <td id="cart-total">$44.98</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- update subtotal -->
+    <script>
+        function updateSubtotalAndSum() {
+            const rows = document.querySelectorAll('tr');
+            let cartTotal = 0;
+            
+            rows.forEach(row => {
+                const input = row.querySelector('.val1');
+                if (input) {
+                    const quantity = parseFloat(input.value);
+                    const price = parseFloat(row.querySelector('.val2').textContent.substring(1));
+                    const total = Math.round(quantity * price * 100) / 100;
+                    row.querySelector('.result').textContent = '$' + total.toString();
+                    cartTotal += total;
+                }
+            });
+            
+            // Update cart total with 2 decimal places
+            document.getElementById('cart-total').textContent = '$' + cartTotal.toString();
+        }
+    </script>
 </body>
 </html>

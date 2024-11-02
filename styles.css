@@ -22,6 +22,12 @@ h1{
     width: 300px;
 }
 
+.book-cart{
+    height: 50px;
+    width: 50px;
+    float: left;
+}
+
 .search_q{
     background-color: #2C7865;
     border-radius: 30px;
