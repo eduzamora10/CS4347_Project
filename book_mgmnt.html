@@ -11,14 +11,14 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
           <div class="col-md-3 mb-2 mb-md-0">
-            <a href="./L_home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+            <a href="./home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
               <img src="./assets/open-book.png"/>
             </a>
           </div>
-
+    
           <div class="col-md-4 text-end">
             <a href="./book_mgmnt.html">
-                <button type="button" class="btn btn-outline- me-2">Book Management</button>
+                <button type="button" id="book-management" class="btn btn-outline- me-2">Book Management</button>
             </a>
             <a href="./checkout.html">
               <button type="button" class="btn">
@@ -218,6 +218,25 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        window.onload = function() {
+            // Check the stored user type
+            const userType = localStorage.getItem('userType');
+            const bookManagementButton = document.getElementById('book-management');
+  
+            if (bookManagementButton) {
+                if (userType === 'staff') {
+                    // Enable the button for staff members
+                    bookManagementButton.disabled = false;
+                } else {
+                    // Disable the button for non-staff users
+                    bookManagementButton.disabled = true;
+                    bookManagementButton.classList.add('disabled'); // Optional for Bootstrap styling
+                }
+            }
+        };
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
