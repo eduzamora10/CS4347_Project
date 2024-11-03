@@ -78,5 +78,17 @@ h1{
 
 .custom-table-checkout{
     background-color: #2C7865;
-    margin-left: 13%;
+    margin-left: 15%;
+    
 }
+.home-pic{
+    border-radius: 30px;
+}
+
+.login-form{
+    margin-top: 10% !important;
+    background-color: #2C7865;
+    border-radius: 30px;
+    color: #f3e3d9;
+}
+
