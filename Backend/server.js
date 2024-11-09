@@ -35,6 +35,16 @@ app.get("/home", (req, res) => {
     res.sendFile(path.join(__dirname, "../home.html"));
 });
 
+// Serve the book management page
+app.get("/book_mgmnt", (req, res) => {
+    res.sendFile(path.join(__dirname, "../book_mgmnt.html"));
+});
+
+// Serve the checkout page
+app.get("/checkout", (req, res) => {
+    res.sendFile(path.join(__dirname, "../checkout.html"));
+});
+
 // Handle login POST request
 app.post("/", (req, res) => {
     const { id, password, userType } = req.body; // Get form data (ID, Password, User Type)
