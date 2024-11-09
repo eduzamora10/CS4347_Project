@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/assets/styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -12,21 +12,24 @@
     <div class="container col-xl-10 col-xxl-8 px-4 py-5">
         <div class="row align-items-center g-lg-5 py-5">
             <div class="col-md-10 mx-auto col-lg-5">
-                <form class="login-form p-4 p-md-5 border rounded-3 bg-body-tertiary" id="loginForm">
+                <form class="login-form p-4 p-md-5 border rounded-3 bg-body-tertiary" id="loginForm" method="POST" action="/">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="ID" required>
+                        <input type="text" class="form-control" id="floatingInput" placeholder="ID" name="id" required>
                         <label for="floatingInput">ID</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" required>
                         <label for="floatingPassword">Password</label>
                     </div>
                     
                     <!-- Toggle Switch for User Type -->
                     <div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" id="userTypeToggle">
-                        <label class="form-check-label" for="userTypeToggle">Check if you are a staff memeber!</label>
+                        <label class="form-check-label" for="userTypeToggle">Check if you are a staff member!</label>
                     </div>
+
+                    <!-- Hidden input to store user type -->
+                    <input type="hidden" name="userType" id="userType" value="student">
 
                     <button class="w-100 btn btn-lg" type="submit">Sign in</button>
                     <hr class="my-4">
@@ -36,20 +39,11 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission behavior
-            const isStaff = document.getElementById('userTypeToggle').checked;
-
-            if (isStaff) {
-                localStorage.setItem('userType', 'staff');
-            } else {
-                // Handle logic for student login or continue with form submission
-                localStorage.setItem('userType', 'student');
-            }
-
-            window.location.href = '/home.html';
+        // Update hidden userType field based on toggle switch
+        document.getElementById('userTypeToggle').addEventListener('change', function() {
+            const userTypeField = document.getElementById('userType');
+            userTypeField.value = this.checked ? 'staff' : 'student';
         });
-
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
