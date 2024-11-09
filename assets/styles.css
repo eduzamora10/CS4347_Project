@@ -14,13 +14,14 @@ h1{
 }
 
 .book_img{
-    height: 500px;
+    height: 100px;
+    width: 100px;
+    margin-top: 15%;
+    margin-left: 35%;
+    margin-right: 35%;
+    margin-bottom: 10%;
 }
 
-.book_list_ver{
-    height: 300px;
-    width: 300px;
-}
 
 .book-cart{
     height: 50px;
