@@ -44,6 +44,12 @@
             const userTypeField = document.getElementById('userType');
             userTypeField.value = this.checked ? 'staff' : 'student';
         });
+
+        // Save userType to localStorage on form submit
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const userType = document.getElementById('userType').value;
+            localStorage.setItem('userType', userType);
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
