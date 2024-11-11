@@ -6,7 +6,8 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
-// Middleware to parse URL-encoded data (form submissions)
+// Middleware to parse JSON and URL-encoded data
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,7 @@ connection.connect((error) => {
     console.log("Connected to the database successfully!");
 });
 
+// Serve HTML pages
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../start.html"));
 });
@@ -35,23 +37,19 @@ app.get("/home", (req, res) => {
     res.sendFile(path.join(__dirname, "../home.html"));
 });
 
-// Serve the book management page
 app.get("/book_mgmnt", (req, res) => {
     res.sendFile(path.join(__dirname, "../book_mgmnt.html"));
 });
 
-// Serve the checkout page
 app.get("/checkout", (req, res) => {
     res.sendFile(path.join(__dirname, "../checkout.html"));
 });
 
 // Handle login POST request
 app.post("/", (req, res) => {
-    const { id, password, userType } = req.body; // Get form data (ID, Password, User Type)
-    
-    // Check credentials in the authentification_system table
+    const { id, password, userType } = req.body;
     const query = "SELECT * FROM authentification_system WHERE username = ? AND password = ? AND user_type = ?";
-    
+
     connection.query(query, [id, password, userType], (error, results) => {
         if (error) {
             console.error(error);
@@ -63,6 +61,58 @@ app.post("/", (req, res) => {
         } else {
             res.redirect("/");  // Redirect back to login page if credentials are incorrect
         }
+    });
+});
+
+// Get all books
+app.get("/api/books", (req, res) => {
+    const sql = "SELECT * FROM books";
+    connection.query(sql, (error, results) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).send("Failed to retrieve books.");
+        }
+        res.json(results);
+    });
+});
+
+// Create a new book
+app.post("/api/books", (req, res) => {
+    const { title, author } = req.body;
+    const sql = "INSERT INTO books (title, author) VALUES (?, ?)";
+    connection.query(sql, [title, author], (error, result) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).send("Failed to add book.");
+        }
+        res.status(201).json({ id: result.insertId, title, author });
+    });
+});
+
+// Update a book
+app.put("/api/books/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, author } = req.body;
+    const sql = "UPDATE books SET title = ?, author = ? WHERE id = ?";
+    connection.query(sql, [title, author, id], (error) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).send("Failed to update book.");
+        }
+        res.send("Book updated successfully.");
+    });
+});
+
+// Delete a book
+app.delete("/api/books/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM books WHERE id = ?";
+    connection.query(sql, [id], (error) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).send("Failed to delete book.");
+        }
+        res.status(204).send();  // Send no content response on successful delete
     });
 });
 

@@ -40,8 +40,6 @@ h1{
 
 .btn{
     background-color: #99f767 !important;
-    border: solid black;
-    color: black !important;
     
     margin-right: 5%;
 }
@@ -91,5 +89,16 @@ h1{
     background-color: #2C7865;
     border-radius: 30px;
     color: #f3e3d9;
+}
+
+.table{
+    background-color: #1b5f4e;
+    color: #dce7d5;
+}
+
+/* Change the background and text color on hover */
+.custom-table-hover tbody tr:hover {
+    background-color: #367967; /* Replace with your desired background color */
+    color: #ffffff; /* Replace with your desired text color */
 }
 
