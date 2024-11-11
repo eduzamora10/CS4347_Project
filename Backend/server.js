@@ -112,10 +112,10 @@ app.put("/api/books/:id", (req, res) => {
     });
 });
 
-app.delete("/api/books/:id", (req, res) => {
-    const { id } = req.params;
+app.delete("/api/books/:isbn", (req, res) => {
+    const { isbn } = req.params;
     const sql = "DELETE FROM books WHERE isbn = ?";
-    connection.query(sql, [id], (error) => {
+    connection.query(sql, [isbn], (error) => {
         if (error) {
             console.error("Error deleting book:", error);
             return res.status(500).send("Failed to delete book.");
@@ -123,6 +123,7 @@ app.delete("/api/books/:id", (req, res) => {
         res.status(204).send();
     });
 });
+
 
 // Set app port
 app.listen(4500, () => {

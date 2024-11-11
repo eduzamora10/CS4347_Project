@@ -136,9 +136,12 @@
 
         function displayBooks(books) {
             const booksTableBody = document.getElementById('booksTableBody');
-            booksTableBody.innerHTML = '';
+            booksTableBody.innerHTML = ''; // Clear existing table rows before populating new data
+
             books.forEach(book => {
                 const row = document.createElement('tr');
+                row.id = book.isbn; // Set the row ID to the ISBN
+
                 row.innerHTML = `
                     <td>${book.isbn}</td>
                     <td>${book.title}</td>
@@ -149,12 +152,13 @@
                     <td>${book.staff_id}</td>
                     <td>
                         <button class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="editBook(${book.id})">Update</button>
-                        <button class="btn btn-sm " onclick="deleteBook(${book.id})">Delete</button>
+                        <button class="btn btn-sm" onclick="deleteBook('${book.isbn}')">Delete</button>
                     </td>
                 `;
                 booksTableBody.appendChild(row);
             });
         }
+
 
         async function addBook() {
             const book = {
@@ -224,14 +228,34 @@
             }
         }
 
-        async function deleteBook(id) {
+        async function deleteBook(isbn) {
             try {
-                const response = await fetch(`/api/books/${id}`, { method: 'DELETE' });
-                if (response.ok) fetchBooks();
+                const url = `/api/books/${isbn}`;  // URL with ISBN for deletion
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+
+                console.log("Response Status:", response.status);  // Log status code
+                console.log("Response Text:", await response.text());  // Log response text
+
+                if (response.ok) {
+                    // Success: alert and remove the book from UI
+                    alert('Book deleted successfully!');
+                    document.getElementById(isbn).remove();
+                } else {
+                    // If the response is not ok, log the failure message
+                    console.error("Failed to delete book:", response.statusText);
+                    alert('Failed to delete book');
+                }
             } catch (error) {
+                // If there's an error with the fetch request, log the error
                 console.error("Error deleting book:", error);
+                alert('Error deleting book');
             }
         }
+
+
+
 
         window.onload = fetchBooks;
     </script>
