@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
+// Database connection setup
 const connection = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
@@ -22,9 +23,11 @@ const connection = mysql.createConnection({
     database: '4347_db'
 });
 
-// Connect to the database
 connection.connect((error) => {
-    if (error) throw error;
+    if (error) {
+        console.error("Database connection failed:", error);
+        process.exit(1); // Exit if database connection fails
+    }
     console.log("Connected to the database successfully!");
 });
 
@@ -52,67 +55,72 @@ app.post("/", (req, res) => {
 
     connection.query(query, [id, password, userType], (error, results) => {
         if (error) {
-            console.error(error);
+            console.error("Login query error:", error);
             return res.status(500).send('Internal Server Error');
         }
 
         if (results.length > 0) {
-            res.redirect("/home");  // Redirect to home if login is successful
+            res.redirect("/home");
         } else {
-            res.redirect("/");  // Redirect back to login page if credentials are incorrect
+            res.redirect("/?error=invalid_credentials");  // Optionally include error query
         }
     });
 });
 
-// Get all books
+// Book API routes
 app.get("/api/books", (req, res) => {
     const sql = "SELECT * FROM books";
     connection.query(sql, (error, results) => {
         if (error) {
-            console.error(error);
+            console.error("Error retrieving books:", error);
             return res.status(500).send("Failed to retrieve books.");
         }
         res.json(results);
     });
 });
 
-// Create a new book
 app.post("/api/books", (req, res) => {
-    const { title, author } = req.body;
-    const sql = "INSERT INTO books (title, author) VALUES (?, ?)";
-    connection.query(sql, [title, author], (error, result) => {
+    const { isbn, title, author, availability, genre, pub_id, staff_id } = req.body;
+
+    // Ensure all required fields are provided
+    if (!isbn || !title || !author || !availability || !genre || !pub_id || !staff_id) {
+        return res.status(400).send("All book details must be provided.");
+    }
+
+    const sql = "INSERT INTO books (isbn, title, author, availability, genre, pub_id, staff_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    connection.query(sql, [isbn, title, author, availability, genre, pub_id, staff_id], (error, result) => {
         if (error) {
-            console.error(error);
+            console.error("Error adding book:", error);
             return res.status(500).send("Failed to add book.");
         }
-        res.status(201).json({ id: result.insertId, title, author });
+        res.status(201).json({ id: result.insertId, isbn, title, author, availability, genre, pub_id, staff_id });
     });
 });
 
-// Update a book
+
 app.put("/api/books/:id", (req, res) => {
     const { id } = req.params;
     const { title, author } = req.body;
-    const sql = "UPDATE books SET title = ?, author = ? WHERE id = ?";
+    const sql = "UPDATE books SET title = ?, author = ? WHERE isbn = ?";
     connection.query(sql, [title, author, id], (error) => {
         if (error) {
-            console.error(error);
+            console.error("Error updating book:", error);
             return res.status(500).send("Failed to update book.");
         }
         res.send("Book updated successfully.");
     });
 });
 
-// Delete a book
 app.delete("/api/books/:id", (req, res) => {
     const { id } = req.params;
-    const sql = "DELETE FROM books WHERE id = ?";
+    const sql = "DELETE FROM books WHERE isbn = ?";
     connection.query(sql, [id], (error) => {
         if (error) {
-            console.error(error);
+            console.error("Error deleting book:", error);
             return res.status(500).send("Failed to delete book.");
         }
-        res.status(204).send();  // Send no content response on successful delete
+        res.status(204).send();
     });
 });
 

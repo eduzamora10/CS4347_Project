@@ -46,33 +46,25 @@
         </div>
     </div>
 
-    <!-- Modal for adding new book -->
-    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <!-- Add Book Modal -->
+    <div class="modal fade" id="formModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabel">Add New Book</h5>
-                </div>
+                <div class="modal-header"><h5>Add New Book</h5></div>
                 <div class="modal-body">
                     <form id="bookForm">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" placeholder="Enter book title">
-                        </div>
-                        <div class="mb-3">
-                            <label for="author" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="author" placeholder="Enter author's name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="genre" class="form-label">Genre</label>
-                            <input type="text" class="form-control" id="genre" placeholder="Enter book genre">
-                        </div>
-                        <!-- Additional form fields for other book attributes -->
+                        <input type="text" id="isbn" placeholder="ISBN" class="form-control mb-2">
+                        <input type="text" id="title" placeholder="Title" class="form-control mb-2">
+                        <input type="text" id="author" placeholder="Author" class="form-control mb-2">
+                        <input type="text" id="genre" placeholder="Genre" class="form-control mb-2">
+                        <input type="text" id="pub_id" placeholder="Pub_ID" class="form-control mb-2">
+                        <input type="text" id="availability" placeholder="Availability" class="form-control mb-2">
+                        <input type="text" id="staff_id" placeholder="Staff_ID" class="form-control mb-2">
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="addBook()">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button onclick="addBook()" class="btn btn-primary">Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -130,11 +122,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fetch books from the server and display in table
+        let selectedBookId;
+
         async function fetchBooks() {
             try {
                 const response = await fetch('/api/books');
-                if (!response.ok) throw new Error("Failed to fetch books");
                 const books = await response.json();
                 displayBooks(books);
             } catch (error) {
@@ -142,10 +134,9 @@
             }
         }
 
-        // Populate the table with book data
         function displayBooks(books) {
             const booksTableBody = document.getElementById('booksTableBody');
-            booksTableBody.innerHTML = ''; // Clear previous rows
+            booksTableBody.innerHTML = '';
             books.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -156,11 +147,90 @@
                     <td>${book.pub_id}</td>
                     <td>${book.availability}</td>
                     <td>${book.staff_id}</td>
-                    <td><button class="btn btn-sm " data-toggle="modal" data-target="#updateModal" onclick="editBook(${book.id})">Edit</button></td>
-                    <td><button class="btn btn-sm " onclick="deleteBook(${book.id})">Delete</button></td>
+                    <td>
+                        <button class="btn btn-sm" data-toggle="modal" data-target="#updateModal" onclick="editBook(${book.id})">Update</button>
+                        <button class="btn btn-sm " onclick="deleteBook(${book.id})">Delete</button>
+                    </td>
                 `;
                 booksTableBody.appendChild(row);
             });
+        }
+
+        async function addBook() {
+            const book = {
+                isbn: document.getElementById('isbn').value,
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                genre: document.getElementById('genre').value,
+                pub_id: document.getElementById('pub_id').value,
+                availability: document.getElementById('availability').value,
+                staff_id: document.getElementById('staff_id').value
+            };
+
+            try {
+                const response = await fetch('/api/books', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(book)
+                });
+                if (response.ok) {
+                    fetchBooks();
+                    $('#formModal').modal('hide');
+                }
+            } catch (error) {
+                console.error("Error adding book:", error);
+            }
+        }
+
+        function editBook(id) {
+            selectedBookId = id;
+            // Populate the update form with the selected book data
+            fetch(`/api/books/${id}`)
+                .then(response => response.json())
+                .then(book => {
+                    document.getElementById('updateIsbn').value = book.isbn;
+                    document.getElementById('updateTitle').value = book.title;
+                    document.getElementById('updateAuthor').value = book.author;
+                    document.getElementById('updateGenre').value = book.genre;
+                    document.getElementById('updatePub_id').value = book.pub_id;
+                    document.getElementById('updateAvailability').value = book.availability;
+                    document.getElementById('updateStaff_id').value = book.staff_id;
+                });
+        }
+
+        async function updateBook() {
+            const book = {
+                isbn: document.getElementById('updateIsbn').value,
+                title: document.getElementById('updateTitle').value,
+                author: document.getElementById('updateAuthor').value,
+                genre: document.getElementById('updateGenre').value,
+                pub_id: document.getElementById('updatePub_id').value,
+                availability: document.getElementById('updateAvailability').value,
+                staff_id: document.getElementById('updateStaff_id').value
+            };
+
+            try {
+                const response = await fetch(`/api/books/${selectedBookId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(book)
+                });
+                if (response.ok) {
+                    fetchBooks();
+                    $('#updateModal').modal('hide');
+                }
+            } catch (error) {
+                console.error("Error updating book:", error);
+            }
+        }
+
+        async function deleteBook(id) {
+            try {
+                const response = await fetch(`/api/books/${id}`, { method: 'DELETE' });
+                if (response.ok) fetchBooks();
+            } catch (error) {
+                console.error("Error deleting book:", error);
+            }
         }
 
         window.onload = fetchBooks;
