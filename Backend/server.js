@@ -16,14 +16,14 @@ const __dirname = path.dirname(__filename);
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
 // Database connection setup
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
     password: 'soccer',
     database: '4347_db'
 });
 
-connection.connect((error) => {
+db.connect((error) => {
     if (error) {
         console.error("Database connection failed:", error);
         process.exit(1); // Exit if database connection fails
@@ -57,7 +57,7 @@ app.post("/", (req, res) => {
     const { id, password, userType } = req.body;
     const query = "SELECT * FROM authentification_system WHERE username = ? AND password = ? AND user_type = ?";
 
-    connection.query(query, [id, password, userType], (error, results) => {
+    db.query(query, [id, password, userType], (error, results) => {
         if (error) {
             console.error("Login query error:", error);
             return res.status(500).send('Internal Server Error');
@@ -74,7 +74,7 @@ app.post("/", (req, res) => {
 // Book API routes
 app.get("/api/books", (req, res) => {
     const sql = "SELECT * FROM books";
-    connection.query(sql, (error, results) => {
+    db.query(sql, (error, results) => {
         if (error) {
             console.error("Error retrieving books:", error);
             return res.status(500).send("Failed to retrieve books.");
@@ -93,7 +93,7 @@ app.post("/api/books", (req, res) => {
 
     const sql = "INSERT INTO books (isbn, title, author, availability, genre, pub_id, staff_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     
-    connection.query(sql, [isbn, title, author, availability, genre, pub_id, staff_id], (error, result) => {
+    db.query(sql, [isbn, title, author, availability, genre, pub_id, staff_id], (error, result) => {
         if (error) {
             console.error("Error adding book:", error);
             return res.status(500).send("Failed to add book.");
@@ -102,36 +102,32 @@ app.post("/api/books", (req, res) => {
     });
 });
 
-
 // PUT update book by ISBN
-app.put('/api/books/:isbn', (req, res) => {
+app.put("/api/books/:isbn", (req, res) => {
     const { isbn } = req.params;
-    const { title, author, availability } = req.body;
-
-    const sql = "UPDATE books SET title = ?, author = ?, availability = ? WHERE isbn = ?";
-    connection.query(sql, [title, author, availability, isbn], (error, result) => {
+    const { title, author, genre, pub_id, availability, staff_id } = req.body;
+    
+    // SQL query to update the book details
+    const sql = "UPDATE books SET title = ?, author = ?, genre = ?, pub_id = ?, availability = ?, staff_id = ? WHERE isbn = ?";
+    
+    // Execute the query with values from the request body and isbn
+    db.query(sql, [title, author, genre, pub_id, availability, staff_id, isbn], (error, result) => {
         if (error) {
             console.error("Error updating book:", error);
             return res.status(500).send("Failed to update book.");
         }
-
-        if (result.affectedRows > 0) {
-            res.status(200).send("Book updated successfully.");
-        } else {
-            res.status(404).send("Book not found.");
+        if (result.affectedRows === 0) {
+            return res.status(404).send("Book not found.");
         }
+        res.status(200).json({ message: "Book updated successfully" });
     });
 });
-
-
-
-
 
 
 app.delete("/api/books/:isbn", (req, res) => {
     const { isbn } = req.params;
     const sql = "DELETE FROM books WHERE isbn = ?";
-    connection.query(sql, [isbn], (error) => {
+    db.query(sql, [isbn], (error) => {
         if (error) {
             console.error("Error deleting book:", error);
             return res.status(500).send("Failed to delete book.");
@@ -139,7 +135,6 @@ app.delete("/api/books/:isbn", (req, res) => {
         res.status(204).send();
     });
 });
-
 
 // Set app port
 app.listen(4500, () => {
