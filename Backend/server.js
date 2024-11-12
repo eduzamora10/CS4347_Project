@@ -48,6 +48,10 @@ app.get("/checkout", (req, res) => {
     res.sendFile(path.join(__dirname, "../checkout.html"));
 });
 
+app.get("/book_list", (req, res) => {
+    res.sendFile(path.join(__dirname, "../book_list.html"));
+});
+
 // Handle login POST request
 app.post("/", (req, res) => {
     const { id, password, userType } = req.body;
@@ -99,18 +103,30 @@ app.post("/api/books", (req, res) => {
 });
 
 
-app.put("/api/books/:id", (req, res) => {
-    const { id } = req.params;
-    const { title, author } = req.body;
-    const sql = "UPDATE books SET title = ?, author = ? WHERE isbn = ?";
-    connection.query(sql, [title, author, id], (error) => {
+// PUT update book by ISBN
+app.put('/api/books/:isbn', (req, res) => {
+    const { isbn } = req.params;
+    const { title, author, availability } = req.body;
+
+    const sql = "UPDATE books SET title = ?, author = ?, availability = ? WHERE isbn = ?";
+    connection.query(sql, [title, author, availability, isbn], (error, result) => {
         if (error) {
             console.error("Error updating book:", error);
             return res.status(500).send("Failed to update book.");
         }
-        res.send("Book updated successfully.");
+
+        if (result.affectedRows > 0) {
+            res.status(200).send("Book updated successfully.");
+        } else {
+            res.status(404).send("Book not found.");
+        }
     });
 });
+
+
+
+
+
 
 app.delete("/api/books/:isbn", (req, res) => {
     const { isbn } = req.params;
