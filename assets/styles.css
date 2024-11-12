@@ -48,6 +48,15 @@ h1{
     background-color: aliceblue !important;
 }
 
+.btn-no-hover{
+    background-color: #99f767 !important;
+    margin-right: 5%;
+}
+
+.btn-no-hover:hover{
+    background-color: #81da52 !important;
+}
+
 .home-text{
     font-weight: bolder !important;
     text-align: center;
@@ -132,6 +141,22 @@ h1{
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+#updateFormContainer {
+    display: none; /* Hidden by default; toggle with JS */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    max-height: 80vh; /* Constrain max height to 80% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Style form elements */
 #updateFormContainer h2 {
     text-align: center;
@@ -153,18 +178,34 @@ h1{
     box-sizing: border-box;
 }
 
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
 #updateForm button {
-    display: block;
-    width: 100%;
+    flex: 1;
     padding: 10px;
-    background-color: #4CAF50;
-    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
-#updateForm button:hover {
+#updateForm button[type="button"]:first-child {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#updateForm button[type="button"]:first-child:hover {
     background-color: #45a049;
+}
+
+#updateForm button[type="button"]:last-child {
+    background-color: #f44336;
+    color: rgb(0, 0, 0);
+}
+
+#updateForm button[type="button"]:last-child:hover {
+    background-color: #e53935;
 }
