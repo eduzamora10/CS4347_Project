@@ -55,9 +55,11 @@ app.get("/book_list", (req, res) => {
 // Handle login POST request
 app.post("/", (req, res) => {
     const { id, password, userType } = req.body;
-    const query = "SELECT * FROM authentification_system WHERE username = ? AND password = ? AND user_type = ?";
-
-    db.query(query, [id, password, userType], (error, results) => {
+    
+    // Directly embedding variables into the query string without parameterization.
+    const query = `SELECT * FROM authentification_system WHERE username = '${id}' AND password = '${password}' AND user_type = '${userType}'`;
+    
+    db.query(query, (error, results) => {
         if (error) {
             console.error("Login query error:", error);
             return res.status(500).send('Internal Server Error');
@@ -66,10 +68,11 @@ app.post("/", (req, res) => {
         if (results.length > 0) {
             res.redirect("/home");
         } else {
-            res.redirect("/?error=invalid_credentials");  // Optionally include error query
+            res.redirect("/?error=invalid_credentials");
         }
     });
 });
+
 
 // Book API routes
 app.get("/api/books", (req, res) => {
