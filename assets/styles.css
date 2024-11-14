@@ -101,14 +101,14 @@ h1{
 }
 
 .table{
-    background-color: #1b5f4e;
-    color: #dce7d5;
+    background-color: #1b5f4e !important;
+    color: #dce7d5 !important;
 }
 
 /* Change the background and text color on hover */
 .custom-table-hover tbody tr:hover {
-    background-color: #367967; /* Replace with your desired background color */
-    color: #ffffff; /* Replace with your desired text color */
+    background-color: #367967 !important; /* Replace with your desired background color */
+    color: #ffffff !important; /* Replace with your desired text color */
 }
 
 #updateFormContainer {

@@ -164,7 +164,7 @@ app.get("/api/books/search", (req, res) => {
         sql += " AND isbn LIKE ?";
         queryParams.push(`%${isbn}%`);
     }
-
+    
     // Log the SQL query and parameters to verify correctness
     console.log("Executing SQL:", sql, queryParams);
 

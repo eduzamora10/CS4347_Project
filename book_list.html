@@ -32,21 +32,28 @@
       </header>
     </div>
 
-    <h1>Book Search Results</h1>
-    <table id="resultsTable" border="1">
-        <thead>
-            <tr>
-                <th>ISBN</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Genre</th>
-                <th>Availability</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Results will be dynamically inserted here -->
-        </tbody>
-    </table>
+    <div class="container">
+      <h1>Book Search Results</h1>
+    </div>
+
+    <div class="container mt-5">
+      
+      <table class="table custom-table-hover custom-table table-hover text-center table-bordered" id="resultsTable" border="1">
+          <thead class="thead-dark">
+              <tr>
+                  <th>ISBN</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Genre</th>
+                  <th>Availability</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!-- Results will be dynamically inserted here -->
+          </tbody>
+      </table>
+    </div>
+    
 
     <script>
       // Extract query parameters from the URL
@@ -79,6 +86,9 @@
                           <td>${book.author}</td>
                           <td>${book.genre}</td>
                           <td>${book.availability}</td>
+                          <td>
+                          <button class="btn btn-sm"">Add to Cart</button>
+                      </td>
                       `;
                   });
               }
