@@ -41,94 +41,47 @@
             <p class="home-p-text fs-4">Welcome! You are invited to search for books in our collection based on various criteria, including title, author, genre, ISBN, publisher, and publication year. Feel free to explore and discover your next great read!</p>
           </div>
           <div class="col-md-10 mx-auto col-lg-5">
-            <form class="p-4 p-md-5 border rounded-3 search_q">
+            <form id="searchForm" action="/book_list" method="get" class="p-4 p-md-5 border rounded-3 search_q">
               <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="floatingInput" placeholder="Title Name">
+                <input type="text" name="title" class="form-control" id="floatingInput" placeholder="Title">
               </div>
               <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="floatingPassword" placeholder="Author Name">
+                <input type="text" name="author" class="form-control" id="floatingAuthor" placeholder="Author">
               </div>
               <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="floatingPassword" placeholder="Genre Name">
+                <input type="text" name="genre" class="form-control" id="floatingGenre" placeholder="Genre">
               </div>
               <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="floatingPassword" placeholder="ISBN">
+                <input type="text" name="isbn" class="form-control" id="floatingISBN" placeholder="ISBN">
               </div>
               <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="floatingPassword" placeholder="Publisher">
+                <input type="text" name="publisher" class="form-control" id="floatingPublisher" placeholder="Publisher">
               </div>
               <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="floatingPassword" placeholder="Publication Year">
+                <input type="number" name="year" class="form-control" id="floatingYear" placeholder="Publication Year">
               </div>
-              <a href="/book_list">
-                <button type="button" id="search" class="w-100 btn btn-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                  </svg>
-                  Search
-                </button>
-              </a>
+              <button type="submit" id="search" class="w-100 btn btn-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+                Search
+              </button>
             </form>
           </div>
         </div>
       </div>
   </div>
 
-  <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col">
-        <div class="card shadow-sm">
-          <img class="book_img" alt="What Is Computer Science?" src="./assets/cover.png"/>
-          <div class="card-body">
-            <p class="card-text">Book Description #1: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-            <div class="d-flex justify-content-between justify-content-md-start">
-              <button type="button" class="btn btn-sm">Add to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card shadow-sm">
-            <img class="book_img" alt="Getting Started with SQL" src="./assets/cover.png"/>
-          <div class="card-body">
-            <p class="card-text">Book Description #2: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-            <div class="d-flex justify-content-between justify-content-md-start">
-              <button type="button" class="btn btn-sm">Add to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card shadow-sm">
-            <img class="book_img" alt="Calculus An Intuitive and Physical Approach" src="./assets/cover.png"/>
-          <div class="card-body">
-            <p class="card-text">Book Description #3: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-            <div class="d-flex justify-content-between justify-content-md-start">
-              <button type="button" class="btn btn-sm">Add to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+ 
 
   <script>
     window.onload = function() {
-        // Check the stored user type
         const userType = localStorage.getItem('userType');
         const bookManagementButton = document.getElementById('book-management');
 
         if (bookManagementButton) {
-            if (userType === 'staff') {
-                // Enable the button for staff members
-                bookManagementButton.disabled = false;
-            } else {
-                // Disable the button for non-staff users
-                bookManagementButton.disabled = true;
-                bookManagementButton.classList.add('disabled'); // Optional for Bootstrap styling
-            }
+            bookManagementButton.disabled = userType !== 'staff';
+            if (userType !== 'staff') bookManagementButton.classList.add('disabled');
         }
     };
   </script>

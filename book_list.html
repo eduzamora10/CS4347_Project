@@ -1,116 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book List/Results (For Both)</title>
-    <link rel="stylesheet" href="/assets/styles.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book List/Results</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a href="/home" class="d-inline-flex link-body-emphasis text-decoration-none">
-          <img src="./assets/open-book.png"/>
-        </a>
-      </div>
-
-      <div class="col-md-4 text-end">
-        <a href="/book_mgmnt">
-            <button type="button" id="book-management" class="btn btn-outline- me-2">Book Management</button>
-        </a>
-        <a href="/checkout">
-          <button type="button" class="btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
-            </svg>
-            Cart
-          </button>
-        </a>
-      </div>
-    </header>
-  </div>
-
-      <div class="container book_background col-xxl-8 py-3">
-        <div class="row flex-lg-row align-items-center g-5 py-5">
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="./assets/book4.jpg" class="book_list_ver d-block mx-lg-auto img-fluid" alt="book" width="700" height="500" loading="lazy">
-          </div>
-          <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Title</h1>
-            <h3>Author</h3>
-            <h3>Genre</h3>
-            <h3>ISBN</h3>
-            <h3>Publisher, Year</h3>
-            <p class="lead">Lorem ipsum odor amet, consectetuer adipiscing elit. Maximus ipsum nam nibh congue suscipit penatibus. Lorem ante posuere neque, quisque purus accumsan. Nisi neque tempus cras nascetur sem integer vel. Dapibus potenti pulvinar ridiculus nibh fusce morbi. Facilisi viverra augue odio dui imperdiet accumsan justo.</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button type="button" class="btn btn-lg px-4 me-md-2">Add to Checkout</button>
-            </div>
-          </div>
+    <div class="container">
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+          <a href="/home" class="d-inline-flex link-body-emphasis text-decoration-none">
+            <img src="./assets/open-book.png"/>
+          </a>
         </div>
-      </div>
-      
 
-      <div class="container book_background col-xxl-8 py-3">
-        <div class="row flex-lg-row align-items-center g-5 py-5">
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="./assets/book5.jpg" class="book_list_ver d-block mx-lg-auto img-fluid" alt="book" width="700" height="500" loading="lazy">
-          </div>
-          <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Title</h1>
-            <h3>Author</h3>
-            <h3>Genre</h3>
-            <h3>ISBN</h3>
-            <h3>Publisher, Year</h3>
-            <p class="lead">Lorem ipsum odor amet, consectetuer adipiscing elit. Hac vestibulum nullam consequat justo pharetra aliquet arcu mauris. Suscipit ligula vehicula potenti justo ad per mollis. Tellus laoreet quam dignissim ut conubia. Suspendisse velit elementum ac; habitant cursus nisi sociosqu?</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button type="button" class="btn btn-lg px-4 me-md-2">Add to Checkout</button>
-            </div>
-          </div>
+        <div class="col-md-4 text-end">
+          <a href="/book_mgmnt">
+              <button type="button" id="book-management" class="btn btn-outline- me-2">Book Management</button>
+          </a>
+          <a href="/checkout">
+            <button type="button" class="btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
+              </svg>
+              Cart
+            </button>
+          </a>
         </div>
-      </div>
+      </header>
+    </div>
 
-      <div class="container book_background col-xxl-8 py-3">
-        <div class="row flex-lg-row align-items-center g-5 py-5">
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="./assets/book6.jpg" class="book_list_ver d-block mx-lg-auto img-fluid" alt="book" width="700" height="500" loading="lazy">
-          </div>
-          <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Title</h1>
-            <h3>Author</h3>
-            <h3>Genre</h3>
-            <h3>ISBN</h3>
-            <h3>Publisher, Year</h3>
-            <p class="lead">Lorem ipsum odor amet, consectetuer adipiscing elit. Fermentum at consequat conubia vitae scelerisque fusce. Porta ipsum lorem facilisi nostra adipiscing at ultricies molestie. Venenatis nisl dapibus convallis ex felis litora. Feugiat praesent sociosqu viverra tellus euismod. Eleifend integer rhoncus aliquet sagittis mollis. Posuere ipsum finibus eros aliquam ad duis.</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button type="button" class="btn btn-lg px-4 me-md-2">Add to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <h1>Book Search Results</h1>
+    <table id="resultsTable" border="1">
+        <thead>
+            <tr>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Results will be dynamically inserted here -->
+        </tbody>
+    </table>
 
-      <div class="container book_background col-xxl-8 py-3">
-        <div class="row flex-lg-row align-items-center g-5 py-5">
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="./assets/book7.jpg" class="book_list_ver d-block mx-lg-auto img-fluid" alt="book" width="700" height="500" loading="lazy">
-          </div>
-          <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Title</h1>
-            <h3>Author</h3>
-            <h3>Genre</h3>
-            <h3>ISBN</h3>
-            <h3>Publisher, Year</h3>
-            <p class="lead">Lorem ipsum odor amet, consectetuer adipiscing elit. Magna tincidunt facilisis sapien fringilla neque eros. Mi mattis sodales at auctor amet. Sem commodo sollicitudin tincidunt felis condimentum vestibulum. Ac arcu aliquam amet ut nibh purus. Quis mus maximus turpis commodo; accumsan eros pharetra potenti. Imperdiet sollicitudin duis posuere fusce fusce.</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-              <button type="button" class="btn btn-lg px-4 me-md-2">Add to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <script>
+      // Extract query parameters from the URL
+      const params = new URLSearchParams(window.location.search);
+      let apiUrl = 'http://localhost:4500/api/books/search?' + params.toString();
 
-      <script>
-        window.onload = function() {
+  
+      // Fetch and display search results
+      fetch(apiUrl)
+          .then(response => {
+              if (!response.ok) throw new Error("Network response was not ok");
+              return response.json();
+          })
+          .then(data => {
+              console.log("Search results:", data);  // Log data for debugging
+              const resultsTable = document.getElementById("resultsTable").getElementsByTagName("tbody")[0];
+              
+              // Check if any data was returned
+              if (data.length === 0) {
+                  const row = resultsTable.insertRow();
+                  const cell = row.insertCell(0);
+                  cell.colSpan = 7;
+                  cell.textContent = "No books found.";
+              } else {
+                  data.forEach(book => {
+                      const row = resultsTable.insertRow();
+                      row.innerHTML = `
+                          <td>${book.isbn}</td>
+                          <td>${book.title}</td>
+                          <td>${book.author}</td>
+                          <td>${book.genre}</td>
+                          <td>${book.availability}</td>
+                      `;
+                  });
+              }
+          })
+          .catch(error => {
+              console.error("Error fetching search results:", error);
+              alert("Failed to fetch search results. Check console for more details.");
+          });
+
+          window.onload = function() {
             // Check the stored user type
             const userType = localStorage.getItem('userType');
             const bookManagementButton = document.getElementById('book-management');
@@ -126,9 +104,8 @@
                 }
             }
         };
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
