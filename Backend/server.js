@@ -139,6 +139,47 @@ app.delete("/api/books/:isbn", (req, res) => {
     });
 });
 
+app.get("/api/books/search", (req, res) => {
+    const { title, author, genre, isbn, publisher, publicationYear } = req.query;
+    
+    // Log the query parameters for debugging
+    console.log("Received search parameters:", req.query);
+
+    let sql = "SELECT * FROM books WHERE 1=1";
+    const queryParams = [];
+
+    if (title) {
+        sql += " AND title LIKE ?";
+        queryParams.push(`%${title}%`);
+    }
+    if (author) {
+        sql += " AND author LIKE ?";
+        queryParams.push(`%${author}%`);
+    }
+    if (genre) {
+        sql += " AND genre LIKE ?";
+        queryParams.push(`%${genre}%`);
+    }
+    if (isbn) {
+        sql += " AND isbn LIKE ?";
+        queryParams.push(`%${isbn}%`);
+    }
+
+    // Log the SQL query and parameters to verify correctness
+    console.log("Executing SQL:", sql, queryParams);
+
+    db.query(sql, queryParams, (error, results) => {
+        if (error) {
+            console.error("Error searching books:", error);
+            return res.status(500).send("Failed to search books.");
+        }
+        res.json(results);
+    });
+});
+
+
+
+
 // Set app port
 app.listen(4500, () => {
     console.log("Server running on port 4500");
