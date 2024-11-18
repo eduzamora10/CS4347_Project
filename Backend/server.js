@@ -97,9 +97,6 @@ app.post("/", (req, res) => {
 
 
 
-
-
-
 // Book API routes
 app.get("/api/books", (req, res) => {
     const sql = "SELECT * FROM books";
@@ -221,6 +218,58 @@ app.get("/api/books/search", (req, res) => {
             return res.status(500).send("Failed to search books.");
         }
         res.json(results);
+    });
+});
+
+// API to add book to cart
+app.post('/api/cart', (req, res) => {
+    const { userId, isbn } = req.body;  // Retrieve userId and isbn from the request body
+
+    if (!userId) {
+        return res.status(400).json({ error: "User ID is required." });  // Handle missing user ID
+    }
+
+    const query = `
+        INSERT INTO cart (user_id, isbn, quantity) 
+        VALUES (?, ?, 1)
+        ON DUPLICATE KEY UPDATE quantity = quantity + 1
+    `;
+
+    // Insert or update the cart with the given user ID and ISBN
+    db.query(query, [userId, isbn], (err, result) => {
+        if (err) {
+            console.error("Error adding book to cart:", err);
+            return res.status(500).json({ error: "Failed to add book to cart." });
+        }
+
+        // Optionally, you can add logic here to update book availability if needed
+        res.status(200).json({ message: "Book added to cart successfully!" });
+    });
+});
+
+
+// Route to fetch cart items for the logged-in user
+app.get('/api/cart', (req, res) => {
+    const userId = req.session.userId;  // Retrieve user ID from session
+
+    if (!userId) {
+        return res.status(401).json({ error: "User is not logged in." });
+    }
+
+    const query = `
+        SELECT books.isbn, books.title, books.author, books.genre, cart.quantity 
+        FROM cart
+        JOIN books ON cart.isbn = books.isbn
+        WHERE cart.user_id = ?
+    `;
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error("Error fetching cart items:", err);
+            return res.status(500).json({ error: "Failed to fetch cart items." });
+        }
+
+        res.status(200).json(results);  // Send back the cart items as a JSON response
     });
 });
 
