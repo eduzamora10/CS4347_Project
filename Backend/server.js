@@ -52,7 +52,7 @@ app.get("/book_list", (req, res) => {
     res.sendFile(path.join(__dirname, "../book_list.html"));
 });
 
-// Handle login POST request
+// Handle login POST request (Allows SQL Injection)
 app.post("/", (req, res) => {
     const { id, password, userType } = req.body;
     
@@ -72,6 +72,32 @@ app.post("/", (req, res) => {
         }
     });
 });
+
+// Handle login POST request (Prevents SQL Injection)
+// app.post("/", (req, res) => {
+//     const { id, password, userType } = req.body;
+
+//     // Use parameterized query to avoid SQL injection
+//     const query = `SELECT * FROM authentification_system WHERE username = ? AND password = ? AND user_type = ?`;
+
+//     // Execute the query with parameters
+//     db.query(query, [id, password, userType], (error, results) => {
+//         if (error) {
+//             console.error("Login query error:", error);
+//             return res.status(500).send('Internal Server Error');
+//         }
+
+//         if (results.length > 0) {
+//             res.redirect("/home");
+//         } else {
+//             res.redirect("/?error=invalid_credentials");
+//         }
+//     });
+// });
+
+
+
+
 
 
 // Book API routes
@@ -105,16 +131,16 @@ app.post("/api/books", (req, res) => {
     });
 });
 
-// PUT update book by ISBN
+// PUT update book by ISBN (Allows SQL Injection)
 app.put("/api/books/:isbn", (req, res) => {
     const { isbn } = req.params;
-    const { title, author, genre, pub_id, availability, staff_id } = req.body;
+    const {title, author, genre, pub_id, availability, staff_id } = req.body;
     
     // SQL query to update the book details
-    const sql = "UPDATE books SET title = ?, author = ?, genre = ?, pub_id = ?, availability = ?, staff_id = ? WHERE isbn = ?";
+    const sql = `UPDATE books SET title = '${title}', author = '${author}', genre = '${genre}', pub_id = '${pub_id}', availability = '${availability}', staff_id = '${staff_id}' WHERE isbn = '${isbn}'`;
     
     // Execute the query with values from the request body and isbn
-    db.query(sql, [title, author, genre, pub_id, availability, staff_id, isbn], (error, result) => {
+    db.query(sql, (error, result) => {
         if (error) {
             console.error("Error updating book:", error);
             return res.status(500).send("Failed to update book.");
@@ -125,6 +151,27 @@ app.put("/api/books/:isbn", (req, res) => {
         res.status(200).json({ message: "Book updated successfully" });
     });
 });
+
+// PUT update book by ISBN (Prevents SQL Injection)
+// app.put("/api/books/:isbn", (req, res) => {
+//     const { isbn } = req.params;
+//     const { title, author, genre, pub_id, availability, staff_id } = req.body;
+    
+//     // SQL query to update the book details
+//     const sql = "UPDATE books SET title = ?, author = ?, genre = ?, pub_id = ?, availability = ?, staff_id = ? WHERE isbn = ?";
+    
+//     // Execute the query with values from the request body and isbn
+//     db.query(sql, [title, author, genre, pub_id, availability, staff_id, isbn], (error, result) => {
+//         if (error) {
+//             console.error("Error updating book:", error);
+//             return res.status(500).send("Failed to update book.");
+//         }
+//         if (result.affectedRows === 0) {
+//             return res.status(404).send("Book not found.");
+//         }
+//         res.status(200).json({ message: "Book updated successfully" });
+//     });
+// });
 
 
 app.delete("/api/books/:isbn", (req, res) => {
