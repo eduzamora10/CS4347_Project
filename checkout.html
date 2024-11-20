@@ -29,6 +29,31 @@
   </div>
 
   <script>
+    async function deleteBook(isbn) {
+        const isConfirmed = confirm("Are you sure you want to remove this book?");
+        if (!isConfirmed) {
+            return; // Exit the function if the user cancels
+        }
+
+        try {
+            const url = `/api/cart/${isbn}`;
+            const response = await fetch(url, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Book deleted successfully!');
+                document.getElementById(isbn).remove();
+            } else {
+                console.error("Failed to remove book:", await response.text());
+                alert('Failed to remove book');
+            }
+        } catch (error) {
+            console.error("Error removing book:", error);
+            alert('Error removing book');
+        }
+    }
+
     // On page load, fetch the cart items for the logged-in user
     window.onload = function() {
         const userId = localStorage.getItem('userId');  // Get userId from localStorage
@@ -53,12 +78,16 @@
                 } else {
                     data.forEach(item => {
                         const row = cartTable.insertRow();
+                        row.id = item.isbn;
                         row.innerHTML = `
                             <td>${item.isbn}</td>
                             <td>${item.title}</td>
                             <td>${item.author}</td>
                             <td>${item.genre}</td>
                             <td>${item.quantity}</td>
+                            <td>
+                                <button class="btn btn-sm" onclick="deleteBook('${item.isbn}')">Remove</button>
+                            </td>
                         `;
                     });
                 }
