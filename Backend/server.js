@@ -1,5 +1,6 @@
 import mysql from 'mysql2';
 import express from 'express';
+import session from 'express-session'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
@@ -9,6 +10,12 @@ const app = express();
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: "",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }  // Set to true for HTTPS
+}));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,6 +62,7 @@ app.get("/book_list", (req, res) => {
 // Handle login POST request (Allows SQL Injection)
 app.post("/", (req, res) => {
     const { id, password, userType } = req.body;
+    req.session.userId = id; // set session id
     
     // Directly embedding variables into the query string without parameterization.
     const query = `SELECT * FROM authentification_system WHERE username = '${id}' AND password = '${password}' AND user_type = '${userType}'`;
