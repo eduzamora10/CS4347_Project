@@ -135,6 +135,13 @@
         // On page load, fetch the cart items for the logged-in user
         window.onload = function () {
             const userId = localStorage.getItem('userId');  // Get userId from localStorage
+            const userType = localStorage.getItem('userType');
+            const bookManagementButton = document.getElementById('book-management');
+
+            if (bookManagementButton) {
+                bookManagementButton.disabled = userType !== 'staff';
+                if (userType !== 'staff') bookManagementButton.classList.add('disabled');
+            }
 
             if (!userId) {
                 alert("Please log in to view your cart.");
@@ -175,6 +182,8 @@
                     alert("Failed to load cart items. Please try again.");
                 });
         };
+
+        
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
