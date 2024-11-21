@@ -294,6 +294,24 @@ app.delete("/api/cart/:isbn", (req, res) => {
     });
 });
 
+// update availability after checkout
+app.put("/api/cart/checkout/:isbn", (req, res) => {
+    const { isbn } = req.params;
+    // const { availability } = req.body;
+    const query = `
+        Update books
+        Set availability = availability - 1
+        WHERE isbn = ?
+    `;
+
+    db.query(query, [isbn], (error) => {
+        if (error) {
+            console.error("Error updataing availability:", error);
+            return res.status(500).send("Failed to update availability.");
+        }
+        res.status(204).send();
+    });
+})
 
 
 

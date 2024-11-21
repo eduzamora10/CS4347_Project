@@ -71,12 +71,13 @@
 
         <!-- checkout button -->
         <div class="mb-3"></div>
-            <button type="button" class="btn" data-toggle="modal" data-target="#checkoutModal">Checkout</button>
+            <button type="button" class="btn" onclick="updateAvailability()" data-toggle="modal" data-target="#checkoutModal">Checkout</button>
         </div>
     </div>
 
     <script>
         async function deleteBook(isbn) {
+            // remove book
             const isConfirmed = confirm("Are you sure you want to remove this book?");
             if (!isConfirmed) {
                 return; // Exit the function if the user cancels
@@ -98,6 +99,36 @@
             } catch (error) {
                 console.error("Error removing book:", error);
                 alert('Error removing book');
+            }
+        }
+
+        // update availability on checkout
+        async function updateAvailability() {
+            const table = document.getElementById("cartTable");
+            const rows = table.rows;
+
+            // loop through table to update availability for each book we're checking out
+            for (let i = 1; i < rows.length; i++) {
+                const isbn = rows[i].cells[0].textContent;
+
+                try {
+                    const url = `api/cart/checkout/${isbn}`;
+                    const response = await fetch(url, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        alert('Availability updated successfully!');
+                        deleteBook(isbn);
+                    } else {
+                        console.error("Failed to update availability:", await response.text());
+                        alert('Failed to update availability');
+                    }
+                } catch (error) {
+                    console.error("Error updating availability:", error);
+                    alert('Error updating availability');
+                }
             }
         }
 
