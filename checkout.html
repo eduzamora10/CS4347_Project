@@ -1,76 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout - Your Cart</title>
-  <link rel="stylesheet" href="/assets/styles.css">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Your Cart</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-  <div class="container">
-    <h1>Your Cart</h1>
+    <!-- Container for header and navigation -->
+    <div class="container">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a href="/home" class="d-inline-flex link-body-emphasis text-decoration-none">
+                    <img src="./assets/open-book.png" />
+                </a>
+            </div>
 
-    <!-- Table for displaying cart items -->
-    <table class="table table-hover table-bordered text-center" id="cartTable">
-      <thead>
-        <tr>
-          <th>ISBN</th>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Genre</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Cart items will be populated here dynamically -->
-      </tbody>
-    </table>
-  </div>
+            <div class="col-md-4 text-end">
+                <a href="/book_mgmnt">
+                    <button type="button" id="book-management" class="btn me-2">Book Management</button>
+                </a>
+                <a href="">
+                    <button type="button" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-cart" viewBox="0 0 16 16">
+                            <path
+                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2">
+                            </path>
+                        </svg>
+                        Cart
+                    </button>
+                </a>
+            </div>
+        </header>
+    </div>
 
-  <script>
-    // On page load, fetch the cart items for the logged-in user
-    window.onload = function() {
-        const userId = localStorage.getItem('userId');  // Get userId from localStorage
+     <!-- checkout modal -->
+     <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabel">Checkout Complete!!</h5>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        if (!userId) {
-            alert("Please log in to view your cart.");
-            return;
+    <div class="container">
+        <h1>Your Cart</h1>
+
+        <!-- Table for displaying cart items -->
+        <table class="table table-hover table-bordered text-center" id="cartTable">
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Cart items will be populated here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- checkout button -->
+        <div class="mb-3"></div>
+            <button type="button" class="btn" onclick="updateAvailability()" data-toggle="modal" data-target="#checkoutModal">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        async function deleteBook(isbn) {
+            // remove book
+            const isConfirmed = confirm("Are you sure you want to remove this book?");
+            if (!isConfirmed) {
+                return; // Exit the function if the user cancels
+            }
+
+            try {
+                const url = `/api/cart/${isbn}`;
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Book deleted successfully!');
+                    document.getElementById(isbn).remove();
+                } else {
+                    console.error("Failed to remove book:", await response.text());
+                    alert('Failed to remove book');
+                }
+            } catch (error) {
+                console.error("Error removing book:", error);
+                alert('Error removing book');
+            }
         }
 
-        // Fetch cart items from the backend
-        fetch(`http://localhost:4500/api/cart`)
-            .then(response => response.json())
-            .then(data => {
-                console.log("Cart data:", data);  // Log data for debugging
-                const cartTable = document.getElementById("cartTable").getElementsByTagName("tbody")[0];
-                
-                if (data.length === 0) {
-                    const row = cartTable.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 5;
-                    cell.textContent = "Your cart is empty.";
-                } else {
-                    data.forEach(item => {
+        // update availability on checkout
+        async function updateAvailability() {
+            const table = document.getElementById("cartTable");
+            const rows = table.rows;
+
+            // loop through table to update availability for each book we're checking out
+            for (let i = 1; i < rows.length; i++) {
+                const isbn = rows[i].cells[0].textContent;
+
+                try {
+                    const url = `api/cart/checkout/${isbn}`;
+                    const response = await fetch(url, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        alert('Availability updated successfully!');
+                        deleteBook(isbn);
+                    } else {
+                        console.error("Failed to update availability:", await response.text());
+                        alert('Failed to update availability');
+                    }
+                } catch (error) {
+                    console.error("Error updating availability:", error);
+                    alert('Error updating availability');
+                }
+            }
+        }
+
+        // On page load, fetch the cart items for the logged-in user
+        window.onload = function () {
+            const userId = localStorage.getItem('userId');  // Get userId from localStorage
+
+            if (!userId) {
+                alert("Please log in to view your cart.");
+                return;
+            }
+
+            // Fetch cart items from the backend
+            fetch(`http://localhost:4500/api/cart`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Cart data:", data);  // Log data for debugging
+                    const cartTable = document.getElementById("cartTable").getElementsByTagName("tbody")[0];
+
+                    if (data.length === 0) {
                         const row = cartTable.insertRow();
-                        row.innerHTML = `
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 5;
+                        cell.textContent = "Your cart is empty.";
+                    } else {
+                        data.forEach(item => {
+                            const row = cartTable.insertRow();
+                            row.id = item.isbn;
+                            row.innerHTML = `
                             <td>${item.isbn}</td>
                             <td>${item.title}</td>
                             <td>${item.author}</td>
                             <td>${item.genre}</td>
                             <td>${item.quantity}</td>
-                        `;
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching cart items:", error);
-                alert("Failed to load cart items. Please try again.");
-            });
-    };
-  </script>
+                            <td>
+                                <button class="btn btn-sm" onclick="deleteBook('${item.isbn}')">Remove</button>
+                            </td>
+                            `;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching cart items:", error);
+                    alert("Failed to load cart items. Please try again.");
+                });
+        };
+    </script>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
