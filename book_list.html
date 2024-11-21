@@ -121,10 +121,10 @@
               })
               .then(response => response.json())
               .then(data => {
-                  console.log(data.message);  // Show success message
+                  alert(data.message);  // Show success message
               })
               .catch(error => {
-                  console.error('Error adding book to cart:', error);
+                  alert('Error adding book to cart:', error);
               });
           }
       });
