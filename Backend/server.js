@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    secret: "",
+    secret: "1gyvFaMIcdKxWJ2Ezep6",
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }  // Set to true for HTTPS
@@ -237,21 +237,41 @@ app.post('/api/cart', (req, res) => {
         return res.status(400).json({ error: "User ID is required." });  // Handle missing user ID
     }
 
-    const query = `
-        INSERT INTO cart (user_id, isbn, quantity) 
-        VALUES (?, ?, 1)
-        ON DUPLICATE KEY UPDATE quantity = quantity + 1
-    `;
+    // Query to check the book's availability
+    const checkAvailabilityQuery = `SELECT availability FROM books WHERE isbn = ?`;
 
-    // Insert or update the cart with the given user ID and ISBN
-    db.query(query, [userId, isbn], (err, result) => {
+    db.query(checkAvailabilityQuery, [isbn], (err, result) => {
         if (err) {
-            console.error("Error adding book to cart:", err);
-            return res.status(500).json({ error: "Failed to add book to cart." });
+            console.error("Error checking book availability:", err);
+            return res.status(500).json({ error: "Failed to check book availability." });
         }
 
-        // Optionally, you can add logic here to update book availability if needed
-        res.status(200).json({ message: "Book added to cart successfully!" });
+        // Check if the book exists in the database
+        if (!result || result.length === 0) {
+            return res.status(404).json({ error: "Book not found in the inventory." });
+        }
+
+        const availability = result[0].availability;
+
+        if (availability === 0) {
+            return res.status(400).json({ error: "Book is unavailable for checkout." }); // Prevent adding unavailable book
+        }
+
+        // Proceed with adding the book to the cart if availability is greater than 0
+        const query = `
+            INSERT INTO cart (user_id, isbn, quantity) 
+            VALUES (?, ?, 1)
+            ON DUPLICATE KEY UPDATE quantity = quantity + 1
+        `;
+
+        db.query(query, [userId, isbn], (err, result) => {
+            if (err) {
+                console.error("Error adding book to cart:", err);
+                return res.status(500).json({ error: "Failed to add book to cart." });
+            }
+
+            res.status(200).json({ message: "Book added to cart successfully!" });
+        });
     });
 });
 
