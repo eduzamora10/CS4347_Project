@@ -192,34 +192,47 @@ app.delete("/api/books/:isbn", (req, res) => {
 });
 
 app.get("/api/books/search", (req, res) => {
-    const { title, author, genre, isbn, publisher, publicationYear } = req.query;
+    const { title, author, genre, isbn, publisher} = req.query;
     
     // Log the query parameters for debugging
     console.log("Received search parameters:", req.query);
-
-    let sql = "SELECT * FROM books WHERE 1=1";
+    
+    // Start with a JOIN between books and publisher tables
+    let sql = `
+        SELECT 
+            books.*,
+            publisher.name as publisher_name,
+            publisher.pub_year
+        FROM books
+        JOIN publisher ON books.pub_id = publisher.pub_id
+        WHERE 1=1`;
+    
     const queryParams = [];
 
     if (title) {
-        sql += " AND title LIKE ?";
+        sql += " AND books.title LIKE ?";
         queryParams.push(`%${title}%`);
     }
     if (author) {
-        sql += " AND author LIKE ?";
+        sql += " AND books.author LIKE ?";
         queryParams.push(`%${author}%`);
     }
     if (genre) {
-        sql += " AND genre LIKE ?";
+        sql += " AND books.genre LIKE ?";
         queryParams.push(`%${genre}%`);
     }
     if (isbn) {
-        sql += " AND isbn LIKE ?";
+        sql += " AND books.isbn LIKE ?";
         queryParams.push(`%${isbn}%`);
+    }
+    if (publisher) {
+        sql += " AND publisher.name LIKE ?";
+        queryParams.push(`%${publisher}%`);
     }
     
     // Log the SQL query and parameters to verify correctness
     console.log("Executing SQL:", sql, queryParams);
-
+    
     db.query(sql, queryParams, (error, results) => {
         if (error) {
             console.error("Error searching books:", error);
